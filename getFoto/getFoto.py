@@ -4,6 +4,10 @@ from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtCore import QObject, pyqtSlot
 
 import threading
+def thread(func):
+    def wrapper(*args, **kwargs):
+        threading.Thread(target=func, args=args, kwargs=kwargs).start()
+    return wrapper
 
 import cv2
 class Camera(QObject):
@@ -36,12 +40,11 @@ class Camera(QObject):
 
     @pyqtSlot()
     def saveImage(self):
-        threading.Thread(name='SaveThread_', target=camera.save).start()
+        camera.save()
 
+    @thread
     def save(self):
-        global counter
-        counter += 1
-        cv2.imwrite("saveFoto/" + str(threading.currentThread().name) + str(threading.currentThread().ident) + "_FOTO_№_" + str(counter) + ".png", img)
+        cv2.imwrite("saveFoto/" + str(threading.currentThread().name)+".png", img)
 
     @pyqtSlot()
     def cameraOF(self):
