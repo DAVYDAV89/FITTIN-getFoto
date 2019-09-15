@@ -1,0 +1,1 @@
+getFoto/dist/getFoto/getFoto
